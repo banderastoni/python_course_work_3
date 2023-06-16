@@ -1,0 +1,127 @@
+#Черновик
+
+import json
+import datetime
+from functions import sort_by_date, sort_by_state, get_last_5, clear_empty_dict
+
+with open('operations.json', 'r', encoding='UTF-8') as f:
+    data = json.loads(f.read())
+
+for i in range(len(data)):
+    if data[i] == {}:
+        del data[i]
+        break
+
+# data.sort(key=lambda x: ['date'], reverse=True)
+# data.sort(key=lambda x: ['state'], reverse=True)
+
+
+# data = sorted(data, key=lambda f: f['date'])
+
+# data.sort(key=operator.itemgetter('date'))
+
+
+# data_sort_by_date = sorted(data, key=operator.itemgetter('date'))
+
+data_sort_by_date = sort_by_date(data)
+data_sort_by_state = sort_by_state(data_sort_by_date)
+data = get_last_5(data_sort_by_state)
+
+# a = 0
+#
+# while a < 5:
+#     print(data[a], '\n')
+#     a += 1
+
+# for item in data:
+#     print(item, '\n')
+#
+for item in data:
+    if "from" in item:
+        d = item["date"]
+        d = d[:10]
+        d = datetime.datetime.strptime(d, '%Y-%m-%d')
+        data_split = item["from"].split(' ')
+        from_name = ''
+        from_number = ''
+        if len(data_split) == 3:
+            from_name = data_split[0] + ' ' + data_split[1]
+            from_number = data_split[2]
+
+        if len(data_split) == 2:
+            from_name = data_split[0]
+            from_number = data_split[1]
+
+        if from_name == "Счет":
+            from_number = '**' + from_number[-4:]
+        else:
+            from_number = from_number[:4] + ' ' + from_number[4:6] + '** **** ' + from_number[12:]
+
+        data_split = item["to"].split(' ')
+        to_name = ''
+        to_number = ''
+        if len(data_split) == 3:
+            to_name = data_split[0] + ' ' + data_split[1]
+            to_number = data_split[2]
+
+        if len(data_split) == 2:
+            to_name = data_split[0]
+            to_number = data_split[1]
+
+        if to_name == "Счет":
+            to_number = '**' + to_number[-4:]
+        else:
+            to_number = to_number[:4] + ' ' + to_number[4:6] + '** **** ' + to_number[12:]
+
+        print('', d.strftime('%d.%m.%Y'), item["description"], '\n',
+              from_name, from_number, '->', to_name, to_number, '\n',
+              item["operationAmount"]["amount"], item["operationAmount"]["currency"]["name"], '\n')
+    else:
+        d = item["date"]
+        d = d[:10]
+        d = datetime.datetime.strptime(d, '%Y-%m-%d')
+
+        data_split = item["to"].split(' ')
+        to_name = ''
+        to_number = ''
+        if len(data_split) == 3:
+            to_name = data_split[0] + ' ' + data_split[1]
+            to_number = data_split[2]
+
+        if len(data_split) == 2:
+            to_name = data_split[0]
+            to_number = data_split[1]
+
+        if to_name == "Счет":
+            to_number = '**' + to_number[-4:]
+        else:
+            to_number = to_number[:4] + ' ' + to_number[4:6] + '** **** ' + to_number[12:]
+
+        print('', d.strftime('%d.%m.%Y'), item["description"], '\n',
+              to_name, to_number, '\n',
+              item["operationAmount"]["amount"], item["operationAmount"]["currency"]["name"], '\n')
+
+# - Номер карты замаскирован и не отображается целиком в формате  XXXX XX** **** XXXX
+# (видны первые 6 цифр и последние 4, разбито по блокам по 4 цифры, разделенных пробелом).
+# - Номер счета замаскирован и не отображается целиком в формате  **XXXX
+# (видны только последние 4 цифры номера счета).
+
+
+# print(data(item["date"]))
+
+# Пример вывода для одной операции:
+# 14.10.2018 Перевод организации
+# Visa Platinum 7000 79** **** 6361 -> Счет **9638
+# 82771.72 руб.
+
+# ак обращаться к элементам коллекции
+# print('data[date] data[description]'
+#       'data[from] -> data[to]'
+#       'data[operationAmount[amount]] data[operationAmount[currency[name]]]')
+
+# Как обрабатывать в случае, если from пустой
+# if data[from]:
+#
+# date description
+# from -> to
+# operationAmount[amount] operationAmount[currency[name]]
