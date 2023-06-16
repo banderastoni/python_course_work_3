@@ -10,6 +10,8 @@ for i in range(len(data)):
         del data[i]
         break
 
+#added branch develop
+
 data_sort_by_date = sort_by_date(data)
 data_sort_by_state = sort_by_state(data_sort_by_date)
 data = get_last_5(data_sort_by_state)
