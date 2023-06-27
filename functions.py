@@ -23,6 +23,7 @@ def convert_date(d):
     """Функция конвертирует данные даты из строки в дату"""
     d = d[:10]
     d = datetime.datetime.strptime(d, '%Y-%m-%d')
+    d = d.strftime('%d.%m.%Y')
     return d
 
 
@@ -88,13 +89,13 @@ def format_print(data):
         d = convert_date(item["date"])
         if 'from' in item:
             from_name, from_number, to_name, to_number = mask_card(item)
-            print('', d.strftime('%d.%m.%Y'), item["description"], '\n',
+            print('', d, item["description"], '\n',
                   from_name, from_number, '->', to_name, to_number, '\n',
                   item["operationAmount"]["amount"], item["operationAmount"]["currency"]["name"], '\n')
         else:
             to_name, to_number = mask_card(item)
-            print('', d.strftime('%d.%m.%Y'), item["description"], '\n',
+            print('', d, item["description"], '\n',
                   to_name, to_number, '\n',
                   item["operationAmount"]["amount"], item["operationAmount"]["currency"]["name"], '\n')
 
-
+    return "Success"
