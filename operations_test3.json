@@ -1,0 +1,15 @@
+{
+  "id": 51314762,
+  "state": "EXECUTED",
+  "date": "2018-08-25T02:58:18.764678",
+  "operationAmount": {
+    "amount": "52245.30",
+    "currency": {
+      "name": "USD",
+      "code": "USD"
+    }
+  },
+  "description": "Перевод с карты на карту",
+  "from": "Visa Classic 4040551273087672",
+  "to": "Visa Platinum 7825450883088021"
+}
